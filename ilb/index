@@ -1,0 +1,35 @@
+#!/usr/bin/env node
+
+const program = require('commander');
+const { version } = require('../package.json')
+const { join } = require('path')
+const { copy, existsSync, createComponent } = require('./uilt')
+const cwd = process.cwd()
+const split = name => name.split('/')
+
+program
+  .version(version, '-v, --version')
+  .option('-i, --init', '创建 react + redux + redux-action + typescript 的开发框架')
+  .option('-c, --component <n>', '创建class组件', split)
+  .option('-f, --function <n>', '创建函数式组件', split)
+  .option('-p, --page <n>', '创建容器页面', split)
+  .parse(process.argv)
+
+if(program.init) {
+  if(existsSync(join(cwd, 'src'))) {
+    throw new Error('请删除或重命名src目录')
+  }
+  copy(join(__dirname, '../template/src'), join(cwd, 'src'))
+}
+else if(program.component) {
+  createComponent(join(cwd, 'src/components'), program.component)
+}
+else if(program.function) {
+  createComponent(join(cwd, 'src/components'), program.function, true)
+}
+else if(program.page) {
+  createComponent(join(cwd, 'src/views'), program.page)
+}
+else {
+  throw new Error('请输入crc -h查看帮助')
+}

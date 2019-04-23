@@ -1,0 +1,6 @@
+@import '../../assets/common';
+
+.box {
+  @include flex-box;
+  @include fixed-box;
+}
