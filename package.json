@@ -1,9 +1,8 @@
 {
   "name": "crcto",
   "version": "0.0.4",
-  "description": "",
+  "description": "react脚手架",
   "scripts": {
-    "start": "node ilb/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
