@@ -46,8 +46,7 @@ function createComponent(cwd, path, f) {
 
   const name = path[path.length - 1]
   const [ctop, copm, cfunc, styles] = [
-`
-import React, { PureComponent } from 'react'
+`import React, { PureComponent } from 'react'
 import styles from './styles.scss'
 interface Props {
   text: string;
