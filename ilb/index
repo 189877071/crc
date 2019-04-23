@@ -3,7 +3,7 @@
 const program = require('commander');
 const { version } = require('../package.json')
 const { join } = require('path')
-const { copy, existsSync, createComponent, warning, success, error, readFileSync, writeFileSync } = require('./uilt')
+const { copy, existsSync, createComponent, warning, error, readFileSync, writeFileSync, renameSync } = require('./uilt')
 const cwd = process.cwd()
 const split = name => name.split('/')
 
@@ -27,6 +27,7 @@ if(program.init) {
   copy(join(__dirname, '../template'), join(cwd, program.init))
   const package = readFileSync(join(__dirname, '../template/package.json')).toString().replace('#####', program.init)
   writeFileSync(join(cwd, program.init, 'package.json'), package)
+  renameSync(join(cwd, program.init, '.gitignore.txt'), join(cwd, program.init, '.gitignore'))
 }
 else if(program.component) {
   createComponent(join(cwd, 'src/components'), program.component)

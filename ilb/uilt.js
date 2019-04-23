@@ -1,5 +1,5 @@
 // 递归拷贝文件
-const { mkdirSync, statSync, existsSync, readFileSync, writeFileSync, readdirSync } = require('fs')
+const { mkdirSync, statSync, existsSync, readFileSync, writeFileSync, readdirSync, renameSync } = require('fs')
 const { join } = require('path')
 
 /**
@@ -115,11 +115,12 @@ function success(str) {
 
 module.exports = {
   copy,
-  existsSync,
   createComponent,
   warning,
   error,
   success,
   readFileSync,
-  writeFileSync
+  writeFileSync,
+  renameSync,
+  existsSync,
 }
