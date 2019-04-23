@@ -3,24 +3,30 @@
 const program = require('commander');
 const { version } = require('../package.json')
 const { join } = require('path')
-const { copy, existsSync, createComponent, warning, success, error } = require('./uilt')
+const { copy, existsSync, createComponent, warning, success, error, readFileSync, writeFileSync } = require('./uilt')
 const cwd = process.cwd()
 const split = name => name.split('/')
 
 program
   .version(version, '-v, --version')
-  .option('-i, --init', '创建 react + redux + redux-action + typescript 的开发框架')
+  .option('-i, --init [name]', '创建项目', '')
   .option('-c, --component <n>', '创建class组件', split)
   .option('-f, --function <n>', '创建函数式组件', split)
   .option('-p, --page <n>', '创建容器页面', split)
   .parse(process.argv)
 
 if(program.init) {
-  if(existsSync(join(cwd, 'src'))) {
-    error('请手动删除或重命名当前src目录')
+  if(!/^(?:@[a-z0-9-~][a-z0-9-._~]*)?[a-z0-9-~][a-z0-9-._~]*$/.test(program.init)) {
+    error('项目名称因根据package.json的name属性的设置')
     return
   }
-  copy(join(__dirname, '../template/src'), join(cwd, 'src'))
+  if(existsSync(join(cwd, program.init))) {
+    error(`${program.init}文件夹以存在`)
+    return
+  }
+  copy(join(__dirname, '../template'), join(cwd, program.init))
+  const package = readFileSync(join(__dirname, '../template/package.json')).toString().replace('#####', program.init)
+  writeFileSync(join(cwd, program.init, 'package.json'), package)
 }
 else if(program.component) {
   createComponent(join(cwd, 'src/components'), program.component)

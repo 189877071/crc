@@ -13,5 +13,5 @@ export default class App extends PureComponent {
         </BrowserRouter>
       </Provider>
     )
-  } 
+  }
 }

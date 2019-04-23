@@ -119,5 +119,7 @@ module.exports = {
   createComponent,
   warning,
   error,
-  success
+  success,
+  readFileSync,
+  writeFileSync
 }
