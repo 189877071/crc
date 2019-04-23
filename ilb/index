@@ -3,7 +3,7 @@
 const program = require('commander');
 const { version } = require('../package.json')
 const { join } = require('path')
-const { copy, existsSync, createComponent } = require('./uilt')
+const { copy, existsSync, createComponent, warning, success, error } = require('./uilt')
 const cwd = process.cwd()
 const split = name => name.split('/')
 
@@ -17,7 +17,8 @@ program
 
 if(program.init) {
   if(existsSync(join(cwd, 'src'))) {
-    throw new Error('请删除或重命名src目录')
+    error('请手动删除或重命名当前src目录')
+    return
   }
   copy(join(__dirname, '../template/src'), join(cwd, 'src'))
 }
@@ -31,5 +32,5 @@ else if(program.page) {
   createComponent(join(cwd, 'src/views'), program.page)
 }
 else {
-  throw new Error('请输入crc -h查看帮助')
+  warning('请输入指定的参数，或者输入crcto -h')
 }

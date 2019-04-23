@@ -9,11 +9,13 @@ const { join } = require('path')
  */
 function copy(path, copyPath) {
   if(!existsSync(path)) {
-    throw new Error(`${path}文件/目录不存在`)
+    error(`${path}文件/目录不存在`)
+    return
   }
   
   if(!existsSync(copyPath)) {
     mkdirSync(copyPath)
+    success(`创建${copyPath}目录`)
   }
 
   const files = readdirSync(path)
@@ -23,6 +25,7 @@ function copy(path, copyPath) {
     const iPath = join(path, files[i])
     if(statSync(iPath).isFile()) {
       writeFileSync(iCopyPath, readFileSync(iPath))
+      success(`创建${iCopyPath}文件`)
     } else {
       copy(iPath, iCopyPath)
     }
@@ -37,8 +40,10 @@ function copy(path, copyPath) {
  */
 function createComponent(cwd, path, f) {
   if(!existsSync(cwd)) {
-    throw new Error(`没有${cwd}目录`)
+    error(`没有${cwd}目录`)
+    return
   }
+
   const name = path[path.length - 1]
   const [ctop, copm, cfunc, styles] = [
 `
@@ -79,25 +84,41 @@ export default (props: Props) => {
     const newCwd = join(cwd, path[i])
     if(!existsSync(newCwd)) {
       mkdirSync(newCwd)
+      success(`创建${newCwd}目录`)
     }
     cwd = newCwd
   }
-
-  if(existsSync(join(cwd, 'index.tsx')) || existsSync(join(cwd, 'styles.scss')) ) {
-    throw new Error('该组件可能已存在，无法继续创建')
-  }
-
+  
   const index = ctop + (f ? cfunc : copm)
-
-  writeFileSync(join(cwd, 'index.tsx'), index)
-  writeFileSync(join(cwd, 'styles.scss'), styles)
+  const indexPath = join(cwd, 'index.tsx')
+  const stylesPath = join(cwd, 'styles.scss')
+  if(existsSync(indexPath) || existsSync(stylesPath) ) {
+    error('该组件可能已存在，无法继续创建')
+    return
+  }
+  writeFileSync(indexPath, index)
+  success(`创建${indexPath}文件`)
+  writeFileSync(stylesPath, styles)
+  success(`创建${stylesPath}文件`)
 }
 
-function createFunction(cwd, path) {
-
+function warning(str) {
+  console.log('\x1B[33m%s\x1B[39m', str)
 }
+
+function error(str) {
+  console.log('\x1B[31m%s\x1B[39m', str)
+}
+
+function success(str) {
+  console.log('\x1B[32m%s\x1B[39m', str)
+}
+
 module.exports = {
   copy,
   existsSync,
-  createComponent
+  createComponent,
+  warning,
+  error,
+  success
 }

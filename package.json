@@ -20,6 +20,6 @@
     "commander": "^2.20.0"
   },
   "bin": {
-    "crc": "./ilb/index"
+    "crcto": "./ilb/index"
   }
 }
