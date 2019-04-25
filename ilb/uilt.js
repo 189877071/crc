@@ -53,7 +53,7 @@ interface Props {
 }
 `,
 `
-export default class ${name} extends PureComponent<Props, {}> {
+export default class ${name.slice(0,1).toUpperCase() + name.slice(1)} extends PureComponent<Props, {}> {
   render() {
     return (
       <div className={styles.box}>
