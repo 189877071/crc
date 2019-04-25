@@ -15,11 +15,14 @@ program
   .option('-p, --page <n>', '创建容器页面', split)
   .parse(process.argv)
 
-if(program.init) {
-  if(!/^(?:@[a-z0-9-~][a-z0-9-._~]*)?[a-z0-9-~][a-z0-9-._~]*$/.test(program.init)) {
-    error('项目名称因根据package.json的name属性的设置')
+if(program.init || program.component || program.function || program.page) {
+  if(!/^[a-z](?:@?[a-z0-9-_])/.test(program.init)) {
+    error('名称只能以该规则/^[a-z](?:@?[a-z0-9-_])/来设置')
     return
   }
+}
+
+if(program.init) {
   if(existsSync(join(cwd, program.init))) {
     error(`${program.init}文件夹以存在`)
     return
@@ -39,5 +42,5 @@ else if(program.page) {
   createComponent(join(cwd, 'src/views'), program.page)
 }
 else {
-  warning('请输入指定的参数，或者输入crcto -h')
+  warning('请输入指定的参数，或者执行crcto -h查询操作规则')
 }
