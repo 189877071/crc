@@ -33,7 +33,7 @@ function copy(path, copyPath) {
 }
 
 /**
- * 创建class组件
+ * 创建组件
  * @param {String} cwd
  * @param {Array} path
  * @param {Boolean} true为函数式组件false为class组件
@@ -45,6 +45,12 @@ function createComponent(cwd, path, f) {
   }
 
   const name = path[path.length - 1]
+  
+  if(!/^[a-z](?:@?[a-z0-9-_])*/.test(name)) {
+    error('名称只能以该规则/^[a-z](?:@?[a-z0-9-_])/来设置')
+    return
+  }
+
   const [ctop, copm, cfunc, styles] = [
 `import React, { PureComponent } from 'react'
 import styles from './styles.scss'

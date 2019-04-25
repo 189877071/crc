@@ -3,7 +3,7 @@
 const program = require('commander');
 const { version } = require('../package.json')
 const { join } = require('path')
-const { copy, existsSync, createComponent, warning, error, readFileSync, writeFileSync, renameSync } = require('./uilt')
+const { copy, existsSync, createComponent, warning, error, readFileSync, writeFileSync, renameSync, hasName } = require('./uilt')
 const cwd = process.cwd()
 const split = name => name.split('/')
 
@@ -15,14 +15,12 @@ program
   .option('-p, --page <n>', '创建容器页面', split)
   .parse(process.argv)
 
-if(program.init || program.component || program.function || program.page) {
-  if(!/^[a-z](?:@?[a-z0-9-_])/.test(program.init)) {
-    error('名称只能以该规则/^[a-z](?:@?[a-z0-9-_])/来设置')
-    return
-  }
-}
 
 if(program.init) {
+  if(!/^[a-z](?:@?[a-z0-9-_])*/.test(program.init)) {
+    error('项目名称只能以该规则/^[a-z](?:@?[a-z0-9-_])*/来设置')
+    return
+  }
   if(existsSync(join(cwd, program.init))) {
     error(`${program.init}文件夹以存在`)
     return
