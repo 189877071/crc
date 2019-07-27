@@ -3,7 +3,7 @@ const shell = require('shelljs')
 const { join } = require('path')
 const createPage = require('./createPage')
 const cwd = process.cwd()
-const { error, success, existsSync, copy, readFileSync, copyFile } = require('./uilt')
+const { error, success, existsSync, copy, readFileSync, copyFile, mkdirSync } = require('./uilt')
 
 const { JS, TS, CSS, SCSS, LESS, Redux, MobX, none } = require('./actions')
 
@@ -18,6 +18,8 @@ const reduxindex = readFileSync(join(__dirname, '../template/index/reduxindex'))
 const tsmobxstore = readFileSync(join(__dirname, '../template/store/tsmobxstore'))
 
 const jsmobxstore = readFileSync(join(__dirname, '../template/store/jsmobxstore'))
+
+const gitignore = readFileSync(join(__dirname, '../template/gitignore'))
 
 const reduxcodeTypes = {
   "@types/react-redux": "^7.1.1",
@@ -159,8 +161,14 @@ module.exports = async (name) => {
   packagedata.crcto = { lang, style, provide }
   // 创建 package.json 文件
   copyFile(join(projectpath, 'package.json'), JSON.stringify(packagedata))
+  // 创建.gitignore
+  copyFile(join(projectpath, '.gitignore'), gitignore)
   // 创建 index.ts/index.js 入口文件
   copyFile(indexPath, index)
+  // 创建views目录
+  mkdirSync(join(projectpath, 'src/views'))
+  // 创建components目录
+  mkdirSync(join(projectpath, 'src/components'))
   // 创建app组件
   if (!createPage(projectpath, ['app'])) return
   // 初始化项目
