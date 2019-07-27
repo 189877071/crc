@@ -1,110 +1,35 @@
 // 递归拷贝文件
 const { mkdirSync, statSync, existsSync, readFileSync, writeFileSync, readdirSync, renameSync } = require('fs')
 const { join } = require('path')
-
+const { SCSS, LESS } = require('./actions')
 /**
  * 拷贝目录或文件
  * @param {String} path 
  * @param {String} copyPath 
  */
 function copy(path, copyPath) {
-  if(!existsSync(path)) {
-    error(`${path}文件/目录不存在`)
+  if (!existsSync(path)) {
+    error(`error: is not file/dir ${path} `)
     return
   }
-  
-  if(!existsSync(copyPath)) {
+
+  if (!existsSync(copyPath)) {
     mkdirSync(copyPath)
-    success(`创建${copyPath}目录`)
+    success(`create ${copyPath} dir`)
   }
 
   const files = readdirSync(path)
 
-  for(let i=0; i<files.length; i++) {
+  for (let i = 0; i < files.length; i++) {
     const iCopyPath = join(copyPath, files[i])
     const iPath = join(path, files[i])
-    if(statSync(iPath).isFile()) {
+    if (statSync(iPath).isFile()) {
       writeFileSync(iCopyPath, readFileSync(iPath))
-      success(`创建${iCopyPath}文件`)
+      success(`create ${iCopyPath} file`)
     } else {
       copy(iPath, iCopyPath)
     }
   }
-}
-
-/**
- * 创建组件
- * @param {String} cwd
- * @param {Array} path
- * @param {Boolean} true为函数式组件false为class组件
- */
-function createComponent(cwd, path, f) {
-  if(!existsSync(cwd)) {
-    error(`没有${cwd}目录`)
-    return
-  }
-
-  const name = path[path.length - 1]
-  
-  if(!/^[a-z](?:@?[a-z0-9-_])*/.test(name)) {
-    error('名称只能以该规则/^[a-z](?:@?[a-z0-9-_])/来设置')
-    return
-  }
-
-  const [ctop, copm, cfunc, styles] = [
-`import React, { PureComponent } from 'react'
-import styles from './styles.scss'
-interface Props {
-  text: string;
-}
-`,
-`
-export default class ${name.slice(0,1).toUpperCase() + name.slice(1)} extends PureComponent<Props, {}> {
-  render() {
-    return (
-      <div className={styles.box}>
-        我是${name}组件
-      </div>
-    )
-  }
-}
-`,
-`
-export default (props: Props) => {
-  return (
-    <div className={styles.box}>我是${name}组件</div>
-  )
-}
-`,
-`
-@import '../../assets/common';
-.box {
-  font-size: 36px;
-  color: rgb(7, 140, 149);
-}
-`
-  ]
-
-  for(let i=0; i<path.length; i++) {
-    const newCwd = join(cwd, path[i])
-    if(!existsSync(newCwd)) {
-      mkdirSync(newCwd)
-      success(`创建${newCwd}目录`)
-    }
-    cwd = newCwd
-  }
-  
-  const index = ctop + (f ? cfunc : copm)
-  const indexPath = join(cwd, 'index.tsx')
-  const stylesPath = join(cwd, 'styles.scss')
-  if(existsSync(indexPath) || existsSync(stylesPath) ) {
-    error('该组件可能已存在，无法继续创建')
-    return
-  }
-  writeFileSync(indexPath, index)
-  success(`创建${indexPath}文件`)
-  writeFileSync(stylesPath, styles)
-  success(`创建${stylesPath}文件`)
 }
 
 function warning(str) {
@@ -119,9 +44,59 @@ function success(str) {
   console.log('\x1B[32m%s\x1B[39m', str)
 }
 
+function copyFile(path, data) {
+  const onoff = writeFileSync(path, data)
+  if (onoff) {
+    error(`error: create ${path} file failure`)
+    throw Error(onoff)
+  } else {
+    success(`create ${path}`)
+  }
+}
+
+function mkdirs(path, arr) {
+  for (let i = 0; i < arr.length; i++) {
+    path = join(path, arr[i])
+    if (!existsSync(path)) {
+      mkdirSync(path)
+      success(`create ${path} dir`)
+    }
+  }
+  return path
+}
+
+function getcrctoinfo(projectpath) {
+  let packagedata
+  try {
+    packagedata = JSON.parse(readFileSync(join(projectpath, 'package.json')).toString())
+  } catch (e) {
+    error(`没有${join(projectpath, 'package.json')}文件`)
+    throw Error(e)
+  }
+  if (!packagedata.crcto) {
+    error(`${join(projectpath, 'package.json')}文件的标识数据不存在，无法继续执行操作`)
+    throw Error('')
+  }
+  return packagedata.crcto
+}
+
+function getstylesname(style) {
+  let stylename = 'styles.module' // 样式表名称
+  switch (style) {
+    case LESS:
+      stylename += '.less'
+      break
+    case SCSS:
+      stylename += '.scss'
+      break
+    default:
+      stylename += '.css'
+  }
+  return stylename
+}
+
 module.exports = {
   copy,
-  createComponent,
   warning,
   error,
   success,
@@ -129,4 +104,9 @@ module.exports = {
   writeFileSync,
   renameSync,
   existsSync,
+  copyFile,
+  mkdirSync,
+  mkdirs,
+  getcrctoinfo,
+  getstylesname
 }

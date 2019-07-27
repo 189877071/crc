@@ -1,0 +1,8 @@
+exports.JS = 'JavaScript'
+exports.TS = 'TypeScript'
+exports.CSS = 'CSS'
+exports.SCSS = 'SCSS'
+exports.LESS = 'LESS'
+exports.Redux = 'Redux'
+exports.MobX = 'MobX'
+exports.none = 'none'

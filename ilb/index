@@ -2,11 +2,11 @@
 
 const program = require('commander');
 const { version } = require('../package.json')
-const { join } = require('path')
-const { copy, existsSync, createComponent, warning, error, readFileSync, writeFileSync, renameSync, hasName } = require('./uilt')
 const cwd = process.cwd()
 const split = name => name.split('/')
-
+const creatProject = require('./createProject')
+const creatPage = require('./createPage')
+const creatComponent = require('./createComponent')
 program
   .version(version, '-v, --version')
   .option('-i, --init [name]', '创建项目', '')
@@ -15,30 +15,14 @@ program
   .option('-p, --page <n>', '创建容器页面', split)
   .parse(process.argv)
 
-
-if(program.init) {
-  if(!/^[a-z](?:@?[a-z0-9-_])*/.test(program.init)) {
-    error('项目名称只能以该规则/^[a-z](?:@?[a-z0-9-_])*/来设置')
-    return
-  }
-  if(existsSync(join(cwd, program.init))) {
-    error(`${program.init}文件夹以存在`)
-    return
-  }
-  copy(join(__dirname, '../template'), join(cwd, program.init))
-  const package = readFileSync(join(__dirname, '../template/package.json')).toString().replace('#####', program.init)
-  writeFileSync(join(cwd, program.init, 'package.json'), package)
-  renameSync(join(cwd, program.init, '.gitignore.txt'), join(cwd, program.init, '.gitignore'))
-}
-else if(program.component) {
-  createComponent(join(cwd, 'src/components'), program.component)
-}
-else if(program.function) {
-  createComponent(join(cwd, 'src/components'), program.function, true)
-}
-else if(program.page) {
-  createComponent(join(cwd, 'src/views'), program.page)
-}
-else {
-  warning('请输入指定的参数，或者执行crcto -h查询操作规则')
+if (program.init) {
+  creatProject(program.init)
+} else if (program.component) {
+  creatComponent(cwd, program.component)
+} else if (program.function) {
+  creatComponent(cwd, program.function, true)
+} else if (program.page) {
+  creatPage(cwd, program.page)
+} else {
+  console.log('请输入指定的参数，或者执行crcto -h查询操作规则')
 }

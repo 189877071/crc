@@ -1,6 +1,6 @@
 {
   "name": "crcto",
-  "version": "0.0.7",
+  "version": "1.0.0",
   "description": "react脚手架",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,7 +16,9 @@
   },
   "homepage": "https://github.com/189877071/crc#readme",
   "dependencies": {
-    "commander": "^2.20.0"
+    "commander": "^2.20.0",
+    "inquirer": "^6.5.0",
+    "shelljs": "^0.8.3"
   },
   "bin": {
     "crcto": "./ilb/index"

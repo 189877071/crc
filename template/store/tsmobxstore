@@ -1,0 +1,15 @@
+import { observable, action } from 'mobx'
+
+interface IObservable {
+  name: string
+}
+
+const appStore = observable<IObservable>({
+  name: 'create react app'
+})
+
+export const setName = action((name: string) => {
+  appStore.name = name
+})
+
+export default appStore

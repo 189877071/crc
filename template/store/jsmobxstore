@@ -1,0 +1,11 @@
+import { observable, action } from 'mobx'
+
+const appstore = observable({
+  name: 'Create React App'
+})
+
+export const setName = action((name) => {
+  appstore.name = name
+})
+
+export default appstore

@@ -1,0 +1,17 @@
+import React, { PureComponent } from 'react'
+import { connect } from 'react-redux'
+// import styles from './{{style}}'
+
+class {{name}} extends PureComponent {
+  render() {
+    return (
+      <div>
+        <h1 style={{ textAlign: 'center', fontSize: 24 }}>{{name}}</h1>
+      </div>
+    )
+  }
+}
+
+export default connect((state) => {
+  return { name: state.a.name }
+})({{name}})

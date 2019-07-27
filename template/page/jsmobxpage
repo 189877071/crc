@@ -1,0 +1,15 @@
+import React, { PureComponent } from 'react'
+import { observer } from 'mobx-react'
+// import styles from './{{style}}'
+
+class {{name}} extends PureComponent {
+  render() {
+    return (
+      <div>
+        <h1 style={{ textAlign: 'center', fontSize: 24 }}>{{name}}</h1>
+      </div>
+    )
+  }
+}
+
+export default observer({{name}})

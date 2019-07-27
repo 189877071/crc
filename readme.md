@@ -1,6 +1,5 @@
 ## 个人使用的一个react脚手架
-#### 只是以create-react-app为基础做了些整理
-#### 使用 react + redux + redux-action + typescript
+#### 以create-react-app为基础,开箱即用
 
 ## 使用方式
 #### 安装

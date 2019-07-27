@@ -1,0 +1,12 @@
+import React, { memo } from 'react'
+// import styles from './{{style}}'
+
+const {{name}} = memo((props) => {
+  return (
+    <div>
+      <h1 style={{ textAlign: 'center', fontSize: 24 }}>{{name}}</h1>
+    </div>
+  )
+})
+
+export default {{name}}

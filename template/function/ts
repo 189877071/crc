@@ -1,0 +1,14 @@
+import React, { memo } from 'react'
+// import styles from './{{style}}'
+
+interface IProps {}
+
+const {{name}} = memo((props: IProps) => {
+  return (
+    <div>
+      <h1 style={{ textAlign: 'center', fontSize: 24 }}>{{name}}</h1>
+    </div>
+  )
+})
+
+export default {{name}}
